@@ -10,8 +10,11 @@ import {
   UsersIcon,
 } from "lucide-react";
 
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // Mock API responses
 const fetchDashboardStats = async () => {
@@ -58,14 +61,15 @@ export default function DashboardPage() {
   if (statsError || activitiesError) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <Card className="p-6 text-center">
-          <p className="text-red-500">
-            데이터를 불러오는 중 오류가 발생했습니다.
-          </p>
-          <Button onClick={() => refetchStats()} className="mt-4">
-            다시 시도
-          </Button>
-        </Card>
+        <Alert variant="destructive">
+          <AlertTitle>오류 발생</AlertTitle>
+          <AlertDescription className="flex items-center justify-between">
+            <span>데이터를 불러오는 중 오류가 발생했습니다.</span>
+            <Button onClick={() => refetchStats()} variant="outline" size="sm">
+              다시 시도
+            </Button>
+          </AlertDescription>
+        </Alert>
       </div>
     );
   }
@@ -128,10 +132,10 @@ export default function DashboardPage() {
           <div className="space-y-3">
             {[...Array(5)].map((_, i) => (
               <div key={i} className="flex items-center gap-4">
-                <div className="h-10 w-10 animate-pulse rounded-full bg-zinc-200 dark:bg-zinc-700" />
+                <Skeleton className="h-10 w-10 rounded-full" />
                 <div className="flex-1 space-y-2">
-                  <div className="h-4 w-3/4 animate-pulse rounded bg-zinc-200 dark:bg-zinc-700" />
-                  <div className="h-3 w-1/4 animate-pulse rounded bg-zinc-200 dark:bg-zinc-700" />
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-3 w-1/4" />
                 </div>
               </div>
             ))}
@@ -143,11 +147,11 @@ export default function DashboardPage() {
                 key={activity.id}
                 className="flex items-center gap-4 border-b border-zinc-200 pb-3 last:border-0 dark:border-zinc-700"
               >
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900">
-                  <span className="text-sm font-medium text-blue-600 dark:text-blue-300">
+                <Avatar>
+                  <AvatarFallback className="bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300">
                     {activity.user[0]}
-                  </span>
-                </div>
+                  </AvatarFallback>
+                </Avatar>
                 <div className="flex-1">
                   <p className="text-sm font-medium">
                     {activity.user}{" "}
@@ -192,7 +196,7 @@ function StatCard({
         <div className="flex-1">
           <p className="text-sm text-zinc-500 dark:text-zinc-400">{title}</p>
           {loading ? (
-            <div className="mt-2 h-8 w-24 animate-pulse rounded bg-zinc-200 dark:bg-zinc-700" />
+            <Skeleton className="mt-2 h-8 w-24" />
           ) : (
             <p className="mt-2 text-2xl font-bold">
               {prefix}
@@ -201,7 +205,7 @@ function StatCard({
             </p>
           )}
           {loading ? (
-            <div className="mt-2 h-4 w-16 animate-pulse rounded bg-zinc-200 dark:bg-zinc-700" />
+            <Skeleton className="mt-2 h-4 w-16" />
           ) : (
             <p
               className={`mt-1 flex items-center text-sm ${isPositive ? "text-green-600" : "text-red-600"}`}

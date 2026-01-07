@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -60,7 +61,7 @@ export default function RegisterPage() {
     "bg-emerald-500",
   ];
 
-  const onSubmit = async (data: RegisterInput) => {
+  const onSubmit = async (_data: RegisterInput) => {
     setIsLoading(true);
     setError(null);
 
@@ -70,7 +71,7 @@ export default function RegisterPage() {
 
       // 회원가입 성공 후 로그인 페이지로 이동
       router.push("/login");
-    } catch (err) {
+    } catch {
       setError("회원가입에 실패했습니다. 다시 시도해주세요.");
     } finally {
       setIsLoading(false);
@@ -86,9 +87,9 @@ export default function RegisterPage() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardContent className="space-y-4">
           {error && (
-            <div className="rounded-md bg-red-50 p-3 text-sm text-red-800 dark:bg-red-900/20 dark:text-red-400">
-              {error}
-            </div>
+            <Alert variant="destructive">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
           )}
 
           <div className="space-y-2">

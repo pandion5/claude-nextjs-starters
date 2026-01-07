@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import Link from "next/link";
 
 import {
@@ -22,7 +24,9 @@ import {
   Zap,
 } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface HookCard {
   title: string;
@@ -182,7 +186,22 @@ const categoryColors = {
   라이프사이클: "from-indigo-500 to-violet-500",
 };
 
+type Category =
+  | "타이밍"
+  | "브라우저 API"
+  | "DOM"
+  | "상태 관리"
+  | "라이프사이클"
+  | "all";
+
 export default function ExamplesPage() {
+  const [selectedCategory, setSelectedCategory] = useState<Category>("all");
+
+  const filteredHooks =
+    selectedCategory === "all"
+      ? hooks
+      : hooks.filter((hook) => hook.category === selectedCategory);
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-12 text-center">
@@ -202,7 +221,7 @@ export default function ExamplesPage() {
           return (
             <div
               key={category}
-              className={`rounded-lg bg-gradient-to-br ${gradient} p-4 text-white shadow-lg`}
+              className={`rounded-lg bg-linear-to-br ${gradient} p-4 text-white shadow-lg`}
             >
               <p className="text-2xl font-bold">{count}</p>
               <p className="text-sm opacity-90">{category}</p>
@@ -211,52 +230,95 @@ export default function ExamplesPage() {
         })}
       </div>
 
-      {/* Hook Cards Grid */}
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {hooks.map((hook) => (
-          <Link key={hook.href} href={hook.href}>
-            <Card className="group h-full transition-all hover:shadow-lg hover:scale-[1.02]">
-              <div className="p-6">
-                <div className="mb-4 flex items-start justify-between">
-                  <div
-                    className={`rounded-lg bg-gradient-to-br ${categoryColors[hook.category]} p-3 text-white shadow-md transition-transform group-hover:scale-110`}
-                  >
-                    {hook.icon}
+      {/* Tabs Filter */}
+      <Tabs
+        defaultValue="all"
+        className="mb-8"
+        onValueChange={(value) => setSelectedCategory(value as Category)}
+      >
+        <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6">
+          <TabsTrigger value="all">
+            전체 <Badge className="ml-1">{hooks.length}</Badge>
+          </TabsTrigger>
+          <TabsTrigger value="타이밍">
+            타이밍{" "}
+            <Badge className="ml-1">
+              {hooks.filter((h) => h.category === "타이밍").length}
+            </Badge>
+          </TabsTrigger>
+          <TabsTrigger value="브라우저 API">
+            브라우저{" "}
+            <Badge className="ml-1">
+              {hooks.filter((h) => h.category === "브라우저 API").length}
+            </Badge>
+          </TabsTrigger>
+          <TabsTrigger value="DOM">
+            DOM{" "}
+            <Badge className="ml-1">
+              {hooks.filter((h) => h.category === "DOM").length}
+            </Badge>
+          </TabsTrigger>
+          <TabsTrigger value="상태 관리">
+            상태{" "}
+            <Badge className="ml-1">
+              {hooks.filter((h) => h.category === "상태 관리").length}
+            </Badge>
+          </TabsTrigger>
+          <TabsTrigger value="라이프사이클">
+            라이프사이클{" "}
+            <Badge className="ml-1">
+              {hooks.filter((h) => h.category === "라이프사이클").length}
+            </Badge>
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value={selectedCategory} className="mt-6">
+          {/* Hook Cards Grid */}
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {filteredHooks.map((hook) => (
+              <Link key={hook.href} href={hook.href}>
+                <Card className="group h-full transition-all hover:shadow-lg hover:scale-[1.02]">
+                  <div className="p-6">
+                    <div className="mb-4 flex items-start justify-between">
+                      <div
+                        className={`rounded-lg bg-gradient-to-br ${categoryColors[hook.category]} p-3 text-white shadow-md transition-transform group-hover:scale-110`}
+                      >
+                        {hook.icon}
+                      </div>
+                      <Badge variant="secondary">{hook.category}</Badge>
+                    </div>
+                    <h3 className="mb-2 text-xl font-semibold group-hover:text-blue-600 dark:group-hover:text-blue-400">
+                      {hook.title}
+                    </h3>
+                    <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                      {hook.description}
+                    </p>
+                    <div className="mt-4 flex items-center text-sm font-medium text-blue-600 dark:text-blue-400">
+                      데모 보기
+                      <svg
+                        className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
+                    </div>
                   </div>
-                  <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
-                    {hook.category}
-                  </span>
-                </div>
-                <h3 className="mb-2 text-xl font-semibold group-hover:text-blue-600 dark:group-hover:text-blue-400">
-                  {hook.title}
-                </h3>
-                <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                  {hook.description}
-                </p>
-                <div className="mt-4 flex items-center text-sm font-medium text-blue-600 dark:text-blue-400">
-                  데모 보기
-                  <svg
-                    className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </div>
-              </div>
-            </Card>
-          </Link>
-        ))}
-      </div>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        </TabsContent>
+      </Tabs>
 
       {/* Footer CTA */}
-      <div className="mt-12 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 p-8 text-center text-white">
+      <div className="mt-12 rounded-lg bg-linear-to-r from-blue-500 to-purple-600 p-8 text-center text-white">
         <Heart className="mx-auto mb-4 h-12 w-12" />
         <h2 className="mb-2 text-2xl font-bold">더 많은 훅이 필요하신가요?</h2>
         <p className="mb-4 opacity-90">

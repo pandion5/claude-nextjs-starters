@@ -5,7 +5,7 @@ export const siteConfig = {
   url: "https://your-domain.com",
   ogImage: "https://your-domain.com/og.jpg",
   links: {
-    github: "https://github.com/yourusername/your-repo",
+    github: "https://github.com/pandion5/claude-nextjs-starters",
   },
 };
 

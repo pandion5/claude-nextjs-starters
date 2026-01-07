@@ -1,5 +1,8 @@
 "use client";
 
+import { Toaster } from "@/components/ui/sonner";
+
+import { GlobalModal } from "../global-modal";
 import { QueryProvider } from "./query-provider";
 import { ThemeProvider } from "./theme-provider";
 
@@ -11,7 +14,11 @@ export function Providers({ children }: { children: React.ReactNode }) {
       enableSystem
       disableTransitionOnChange
     >
-      <QueryProvider>{children}</QueryProvider>
+      <QueryProvider>
+        {children}
+        <GlobalModal />
+        <Toaster richColors closeButton position="top-right" />
+      </QueryProvider>
     </ThemeProvider>
   );
 }

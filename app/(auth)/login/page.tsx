@@ -9,6 +9,7 @@ import { useAuthStore } from "@/store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -54,7 +55,7 @@ export default function LoginPage() {
 
       // 대시보드로 리다이렉트
       router.push("/dashboard");
-    } catch (err) {
+    } catch {
       setError("로그인에 실패했습니다. 다시 시도해주세요.");
     } finally {
       setIsLoading(false);
@@ -70,9 +71,9 @@ export default function LoginPage() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardContent className="space-y-4">
           {error && (
-            <div className="rounded-md bg-red-50 p-3 text-sm text-red-800 dark:bg-red-900/20 dark:text-red-400">
-              {error}
-            </div>
+            <Alert variant="destructive">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
           )}
 
           <div className="space-y-2">

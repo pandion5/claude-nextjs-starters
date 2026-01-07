@@ -24,7 +24,10 @@ export default function Home() {
               <Link href="/dashboard">Get Started</Link>
             </Button>
             <Button size="lg" variant="outline" asChild>
-              <Link href="https://github.com" target="_blank">
+              <Link
+                href="https://github.com/pandion5/claude-nextjs-starters"
+                target="_blank"
+              >
                 View on GitHub
               </Link>
             </Button>
